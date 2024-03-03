@@ -1,0 +1,1 @@
+# etcher-ng-classic
