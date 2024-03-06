@@ -15,12 +15,10 @@
  */
 
 import * as Os from 'os';
-import * as path from 'path';
 import * as electron from 'electron';
 import * as electronLog from 'electron-log';
 import { open as openInternal } from './app/os/open-internal/services/open-internal';
 import { open as openExternal } from './app/os/open-external/services/open-external';
-import { displayName } from '../../package.json';
 
 import * as i18next from 'i18next';
 
@@ -87,26 +85,26 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.electrondevtools'),
 					accelerator: isMac ? 'Cmd+Shift+F12' : 'F12',
-					click(item, focusedWindow) {
+					click() {
 						electronLog.info('Opening Electron DevTools on mainWindow.');
-						focusedWindow.openDevTools({ mode: 'detach' });
-					}
+						toggleDevTools();
+					},
 				},
-				{	type: 'separator'	},
+				{ type: 'separator' },
 				{
 					label: i18next.t('menu.gpu'),
 					accelerator: 'CmdorCtrl+Alt+G',
 					click() {
 						electronLog.info('Opening chrome://gpu');
 						openInternal('chrome://gpu');
-					}
+					},
 				},
 				{
 					label: i18next.t('menu.procinternals'),
 					click() {
 						electronLog.info('Opening chrome://process-internals');
 						openInternal('chrome://process-internals');
-					}
+					},
 				},
 				{
 					label: i18next.t('menu.testwindow'),
@@ -114,16 +112,16 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					click() {
 						electronLog.info('Opening Test Window');
 						openInternal('https://www.google.com/');
-					}
+					},
 				},
-				{	type: 'separator'	},
+				{ type: 'separator' },
 				{
 					label: i18next.t('menu.restart'),
 					accelerator: 'CmdorCtrl+Shift+R',
 					click() {
 						electron.app.relaunch();
 						electron.app.quit();
-					}
+					},
 				},
 			],
 		},
@@ -134,7 +132,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.pro'),
 					click() {
-						openInternal('https://www.balena.io/etcher-pro?utm_source=etcher_menu&ref=etcher_menu');
+						openInternal(
+							'https://www.balena.io/etcher-pro?utm_source=etcher_menu&ref=etcher_menu',
+						);
 					},
 				},
 				{
@@ -149,7 +149,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 						openExternal('https://github.com/Alex313031/etcher-ng/issues');
 					},
 				},
-				{	type: 'separator'	},
+				{ type: 'separator' },
 				{
 					label: i18next.t('menu.about'),
 					accelerator: 'CmdorCtrl+Alt+A',
@@ -161,17 +161,17 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 							'Chromium : ' + chromeVer,
 							'Node : ' + nodeVer,
 							'V8 : ' + v8Ver,
-							'OS : ' + currentOS + ' ' + archType
-						]
+							'OS : ' + currentOS + ' ' + archType,
+						];
 						electron.dialog.showMessageBox({
 							type: 'info',
 							title: 'About ' + appName,
 							message: info.join('\n'),
-							buttons: [('Ok')]
+							buttons: ['Ok'],
 						});
-					electronLog.info('Opened About window');
-					}
-				}
+						electronLog.info('Opened About window');
+					},
+				},
 			],
 		},
 	];
@@ -206,17 +206,21 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
 					click(item, focusedWindow) {
-						if (focusedWindow) {focusedWindow.webContents.goBack();}
+						if (focusedWindow) {
+							focusedWindow.webContents.goBack();
+						}
 						electronLog.info('Navigated back');
-					}
+					},
 				},
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
 					click(item, focusedWindow) {
-						if (focusedWindow) {focusedWindow.webContents.goForward();}
+						if (focusedWindow) {
+							focusedWindow.webContents.goForward();
+						}
 						electronLog.info('Navigated forward');
-					}
+					},
 				},
 				{
 					role: 'quit' as const,
@@ -232,17 +236,21 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
 					click(item, focusedWindow) {
-						if (focusedWindow) {focusedWindow.webContents.goBack();}
+						if (focusedWindow) {
+							focusedWindow.webContents.goBack();
+						}
 						electronLog.info('Navigated back');
-					}
+					},
 				},
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
 					click(item, focusedWindow) {
-						if (focusedWindow) {focusedWindow.webContents.goForward();}
+						if (focusedWindow) {
+							focusedWindow.webContents.goForward();
+						}
 						electronLog.info('Navigated forward');
-					}
+					},
 				},
 				{
 					role: 'quit',

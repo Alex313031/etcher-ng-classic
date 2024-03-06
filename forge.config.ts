@@ -34,8 +34,7 @@ const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
 		icon: './assets/icon',
-		executableName:
-			process.platform === 'linux' ? 'etcher-ng' : 'Etcher-ng',
+		executableName: process.platform === 'linux' ? 'etcher-ng' : 'Etcher-ng',
 		appBundleId: 'io.alex313031.etcher',
 		appCategoryType: 'public.app-category.developer-tools',
 		appCopyright: 'Copyright 2016-2024 Balena Ltd. and Alex313031',

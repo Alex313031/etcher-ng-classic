@@ -21,10 +21,9 @@ import { logEvent } from '../../../modules/analytics';
  * @summary Open an external resource in a new BrowserWindow
  */
 export async function open(url: string) {
-
 	logEvent('Open internal link', { url });
 
 	if (url) {
-		new electron.BrowserWindow({width: 900, height: 700}).loadURL(url);
+		new electron.BrowserWindow({ width: 900, height: 700 }).loadURL(url);
 	}
 }
