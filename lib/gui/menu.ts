@@ -58,8 +58,10 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 		// NOTE: We can't use `webContents.toggleDevTools()` here,
 		// as we need to force detached mode
 		if (window.webContents.isDevToolsOpened()) {
+			electronLog.info('Closing Electron DevTools');
 			window.webContents.closeDevTools();
 		} else {
+			electronLog.info('Opening Electron DevTools on mainWindow');
 			window.webContents.openDevTools({
 				mode: 'detach',
 			});
@@ -86,7 +88,6 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.electrondevtools'),
 					accelerator: isMac ? 'Cmd+Shift+F12' : 'F12',
 					click() {
-						electronLog.info('Opening Electron DevTools on mainWindow.');
 						toggleDevTools();
 					},
 				},
