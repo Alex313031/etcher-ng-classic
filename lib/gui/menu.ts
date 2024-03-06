@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import * as Os from 'os';
 import * as path from 'path';
 import * as electron from 'electron';
 import * as electronLog from 'electron-log';
-import * as Os from 'os';
 import { open as openInternal } from './app/os/open-internal/services/open-internal';
 import { open as openExternal } from './app/os/open-external/services/open-external';
 import { displayName } from '../../package.json';

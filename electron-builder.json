@@ -72,6 +72,7 @@
       "libgdk-pixbuf2.0-0",
       "libglib2.0-0",
       "libgtk-3-0",
+      "libkrb5-3",
       "liblzma5",
       "libnotify4",
       "libnspr4",
