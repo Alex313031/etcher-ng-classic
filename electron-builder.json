@@ -115,7 +115,7 @@
     "shortcutName": "Etcher-ng",
     "artifactName": "etcher-ng_setup_${version}_${arch}.${ext}",
     "uninstallDisplayName": "Etcher-ng ${version}",
-    "deleteAppDataOnUninstall": false,
+    "deleteAppDataOnUninstall": true,
     "oneClick": true,
     "license": "LICENSE.md"
   },
