@@ -16,26 +16,24 @@
  * This file handles the writer process.
  */
 
-import {
+import type {
 	OnProgressFunction,
 	OnFailFunction,
+	MultiDestinationProgress,
+} from 'etcher-sdk/build/multi-write';
+import {
 	decompressThenFlash,
 	DECOMPRESSED_IMAGE_PREFIX,
-	MultiDestinationProgress,
 } from 'etcher-sdk/build/multi-write';
 
 import { totalmem } from 'os';
 
 import { cleanupTmpFiles } from 'etcher-sdk/build/tmp';
 
-import {
-	File,
-	Http,
-	BlockDevice,
-	SourceDestination,
-} from 'etcher-sdk/build/source-destination';
+import type { SourceDestination } from 'etcher-sdk/build/source-destination';
+import { File, Http, BlockDevice } from 'etcher-sdk/build/source-destination';
 
-import { WriteResult, FlashError, WriteOptions } from './types/types';
+import type { WriteResult, FlashError, WriteOptions } from './types/types';
 
 import { isJson } from '../shared/utils';
 import { toJSON } from '../shared/errors';
@@ -75,8 +73,8 @@ async function write(options: WriteOptions) {
 	emitLog(`Image: ${imagePath}`);
 	emitLog(`Devices: ${destinations.join(', ')}`);
 	emitLog(`Auto Verification: ${options.verify}`);
-	emitLog(`Auto blockmapping: ${options.autoBlockmapping}`);
-	emitLog(`Decompress first: ${options.decompressFirst}`);
+	emitLog(`Auto Blockmapping: ${options.autoBlockmapping}`);
+	emitLog(`Decompress First: ${options.decompressFirst}`);
 	const dests = options.destinations.map((destination) => {
 		return new BlockDevice({
 			drive: destination,
@@ -147,7 +145,7 @@ export async function cleanup(until: number) {
  * @param {Boolean} autoBlockmapping - whether to trim ext partitions before writing
  * @param {Function} onProgress - function to call on progress
  * @param {Function} onFail - function to call on fail
- * @returns {Promise<{ bytesWritten, devices, errors} >}
+ * @returns {Promise<{ bytesWritten, devices, errors }>}
  */
 async function writeAndValidate({
 	source,

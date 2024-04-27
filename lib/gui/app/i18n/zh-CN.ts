@@ -78,7 +78,7 @@ const translation = {
 			help: '帮助',
 			pro: 'Etcher 专业版',
 			website: 'Etcher 的官网',
-			issue: '提交一个 issue',
+			issue: '提交一个 Issue',
 			devmenu: '开发商',
 			electrondevtools: '打开 Electron 开发工具',
 			testwindow: '打开测试窗口',
@@ -151,9 +151,13 @@ const translation = {
 		settings: {
 			errorReporting: '匿名地向 balena.io 报告运行错误和使用统计',
 			verify: '刷机后自动验证',
+			verifyDesc: '验证驱动器写入是否正确',
 			autoUpdate: '自动更新',
 			settings: '软件设置',
 			systemInformation: '系统信息',
+			trimExtPartitions: '修剪原始图像上未分配的空间（在 ext 类型分区中）',
+			decompressFirst:
+				'在刷新之前解压缩压缩图像（即 .tar.xz）',
 		},
 	},
 };

@@ -1,5 +1,5 @@
 {
-  "electronVersion": "22.3.27",
+  "electronVersion": "28.3.1",
   "asar": true,
   "productName": "Etcher-ng",
   "appId": "com.alex313031.etcher-ng",
@@ -13,11 +13,11 @@
   "files": [ "**/*" ],
   "extraResources": [
     {
-      "from": "./lib/shared/catalina-sudo/sudo-askpass.osascript-en.js",
+      "from": "./lib/shared/sudo/sudo-askpass.osascript-en.js",
       "to": "./"
     },
     {
-      "from": "./lib/shared/catalina-sudo/sudo-askpass.osascript-zh.js",
+      "from": "./lib/shared/sudo/sudo-askpass.osascript-zh.js",
       "to": "./"
     },
     {
@@ -39,7 +39,7 @@
     "icon": "assets/iconset",
     "maintainer": "Alex313031",
     "vendor": "Alex313031",
-    "synopsis": "Etcher-ng is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more",
+    "synopsis": "Etcher-ng is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more.",
     "category": "Utility;",
     "executableName": "etcher-ng",
     "artifactName": "etcher-ng_${version}_${arch}.${ext}",

@@ -2,15 +2,16 @@
 
 import { sourceDestination } from 'etcher-sdk';
 import { replaceWindowsNetworkDriveLetter } from '../gui/app/os/windows-network-drives';
-import axios, { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { isJson } from '../shared/utils';
 import * as path from 'path';
-import {
+import type {
 	SourceMetadata,
 	Authentication,
 	Source,
 } from '../shared/typings/source-selector';
-import { DrivelistDrive } from '../shared/drive-constraints';
+import type { DrivelistDrive } from '../shared/drive-constraints';
 import { omit } from 'lodash';
 
 function isString(value: any): value is string {
@@ -68,7 +69,8 @@ async function getSourceMetadata(
 	selected: string | DrivelistDrive,
 	SourceType: Source,
 	auth?: Authentication,
-) {
+): Promise<SourceMetadata | Record<string, never>> {
+	// `Record<string, never>` means an empty object
 	if (isString(selected)) {
 		const source = await createSource(selected, SourceType, auth);
 
@@ -80,13 +82,12 @@ async function getSourceMetadata(
 			return metadata;
 		} catch (error: any) {
 			// TODO: handle error
+			return {};
 		} finally {
-			try {
-				await source.close();
-			} catch (error: any) {
-				// Noop
-			}
+			await source.close();
 		}
+	} else {
+		return {};
 	}
 }
 

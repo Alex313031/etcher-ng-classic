@@ -129,10 +129,13 @@ const translation = {
 		settings: {
 			errorReporting: '匿名向 balena.io 回報程式錯誤和使用統計資料',
 			verify: '刷機後自動驗證',
+			verifyDesc: '驗證驅動器寫入是否正確',
 			autoUpdate: '自動更新',
 			settings: '軟體設定',
 			systemInformation: '系統資訊',
 			trimExtPartitions: '修改原始映像檔上未分配的空間（在 ext 類型分割區中）',
+			decompressFirst:
+				'在刷新之前解壓縮壓縮影像（即 .tar.xz）',
 		},
 		menu: {
 			edit: '編輯',
@@ -142,7 +145,7 @@ const translation = {
 			help: '協助',
 			pro: 'Etcher 專業版',
 			website: 'Etcher 的官網',
-			issue: '提交 issue',
+			issue: '提交 Issue',
 			devmenu: '開發商',
 			electrondevtools: '開啟 Electron 開發工具',
 			testwindow: '開啟測試視窗',

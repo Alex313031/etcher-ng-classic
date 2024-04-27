@@ -16,14 +16,15 @@
 
 import * as electron from 'electron';
 import * as remote from '@electron/remote';
-import { debounce, capitalize, Dictionary, values } from 'lodash';
+import type { Dictionary } from 'lodash';
+import { debounce, capitalize, values } from 'lodash';
 import outdent from 'outdent';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { v4 as uuidV4 } from 'uuid';
 
 import * as packageJSON from '../../../package.json';
-import { DrivelistDrive } from '../../shared/drive-constraints';
+import type { DrivelistDrive } from '../../shared/drive-constraints';
 import * as EXIT_CODES from '../../shared/exit-codes';
 import * as messages from '../../shared/messages';
 import * as availableDrives from './models/available-drives';
@@ -31,14 +32,14 @@ import * as flashState from './models/flash-state';
 import * as settings from './models/settings';
 import { Actions, observe, store } from './models/store';
 import * as analytics from './modules/analytics';
-import { startApiAndSpawnChild } from './modules/api';
+import { spawnChildAndConnect } from './modules/api';
 import * as exceptionReporter from './modules/exception-reporter';
 import * as osDialog from './os/dialog';
 import * as windowProgress from './os/window-progress';
 import MainPage from './pages/main/MainPage';
 import './css/main.css';
 import * as i18next from 'i18next';
-import { SourceMetadata } from '../../shared/typings/source-selector';
+import type { SourceMetadata } from '../../shared/typings/source-selector';
 
 window.addEventListener(
 	'unhandledrejection',
@@ -65,18 +66,23 @@ store.dispatch({
 
 const applicationSessionUuid = store.getState().toJS().applicationSessionUuid;
 const flashingWorkflowUuid = store.getState().toJS().flashingWorkflowUuid;
+const electronVersion = process.versions.electron;
 
 console.log(outdent`
 	${outdent}
-	 _______  _______  _______  __   __  _______  ______           __    _  _______ 
-	|       ||       ||       ||  | |  ||       ||    _ |         |  |  | ||       |
-	|    ___||_     _||       ||  |_|  ||    ___||   | ||   ____  |   |_| ||    ___|
-	|   |___   |   |  |       ||       ||   |___ |   |_||_ |____| |       ||   | __ 
-	|    ___|  |   |  |      _||       ||    ___||    __  |       |  _    ||   ||  |
-	|   |___   |   |  |     |_ |   _   ||   |___ |   |  | |       | | |   ||   |_| |
-	|_______|  |___|  |_______||__| |__||_______||___|  |_|       |_|  |__||_______|
-
-	Version = ${packageJSON.version}, Type = ${packageJSON.packageType}
+	 _____ _       _
+	|  ___| |     | |
+	| |__ | |_ ___| |__   ___ _ __
+	|  __|| __/ __| '_ \\ / _ \\ '__|
+	| |___| || (__| | | |  __/ |
+	\\____/ \\__\\___|_| |_|\\___|_|
+	
+	
+	App Version = ${packageJSON.version}, Type = ${packageJSON.packageType}
+	
+	Electron Version = ${electronVersion}
+	
+	
 `);
 
 const currentVersion = packageJSON.version;
@@ -137,27 +143,31 @@ function setDrives(drives: Dictionary<DrivelistDrive>) {
 export let requestMetadata: any;
 
 // start the api and spawn the child process
-startApiAndSpawnChild({
+spawnChildAndConnect({
 	withPrivileges: false,
-}).then(({ emit, registerHandler }) => {
-	// start scanning
-	emit('scan');
+})
+	.then(({ emit, registerHandler }) => {
+		// start scanning
+		emit('scan', {});
 
-	// make the sourceMetada awaitable to be used on source selection
-	requestMetadata = async (params: any): Promise<SourceMetadata> => {
-		emit('sourceMetadata', JSON.stringify(params));
+		// make the sourceMetada awaitable to be used on source selection
+		requestMetadata = async (params: any): Promise<SourceMetadata> => {
+			emit('sourceMetadata', JSON.stringify(params));
 
-		return new Promise((resolve) =>
-			registerHandler('sourceMetadata', (data: any) => {
-				resolve(JSON.parse(data));
-			}),
-		);
-	};
+			return new Promise((resolve) =>
+				registerHandler('sourceMetadata', (data: any) => {
+					resolve(JSON.parse(data));
+				}),
+			);
+		};
 
-	registerHandler('drives', (data: any) => {
-		setDrives(JSON.parse(data));
+		registerHandler('drives', (data: any) => {
+			setDrives(JSON.parse(data));
+		});
+	})
+	.catch((error: any) => {
+		throw new Error(`Failed to start the flasher process. error: ${error}`);
 	});
-});
 
 let popupExists = false;
 

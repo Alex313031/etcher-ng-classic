@@ -136,11 +136,14 @@ const translation = {
 			errorReporting:
 				'Anonymously report errors and usage statistics to balena.io',
 			verify: 'Auto Verify after flashing',
+			verifyDesc: 'Verify that the drive was written correctly',
 			autoUpdate: 'Auto-updates enabled',
 			settings: 'Settings',
 			systemInformation: 'System Information',
 			trimExtPartitions:
 				'Trim unallocated space on raw images (in ext-type partitions)',
+			decompressFirst:
+				'Decompress compressed images (i.e. .tar.xz) before flashing',
 		},
 		menu: {
 			edit: 'Edit',
@@ -150,7 +153,7 @@ const translation = {
 			help: 'Help',
 			pro: 'Etcher Pro',
 			website: 'Etcher Website',
-			issue: 'Report an issue',
+			issue: 'Report an Issue',
 			devmenu: 'Developer',
 			electrondevtools: 'Open Electron DevTools',
 			testwindow: 'Open Test Window',

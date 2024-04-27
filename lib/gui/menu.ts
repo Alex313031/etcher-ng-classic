@@ -102,6 +102,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				},
 				{
 					label: i18next.t('menu.procinternals'),
+					accelerator: 'CmdorCtrl+Alt+P',
 					click() {
 						electronLog.info('Opening chrome://process-internals');
 						openInternal('chrome://process-internals');
@@ -117,8 +118,15 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				},
 				{ type: 'separator' },
 				{
+					label: 'Edit Config File',
+					click() {
+						electronLog.info('Editing Config File');
+						electron.app.emit('edit-config-file');
+					},
+				},
+				{
 					label: i18next.t('menu.restart'),
-					accelerator: 'CmdorCtrl+Shift+R',
+					accelerator: 'CmdorCtrl+Alt+R',
 					click() {
 						electron.app.relaunch();
 						electron.app.quit();
@@ -177,7 +185,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 		},
 	];
 
-	if (process.platform === 'darwin') {
+	if (isMac) {
 		menuTemplate.unshift({
 			label: appName,
 			submenu: [
@@ -224,8 +232,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					},
 				},
 				{
-					role: 'quit' as const,
 					label: i18next.t('menu.quit'),
+					accelerator: 'CmdOrCtrl+Q',
+					role: 'quit' as const,
 				},
 			],
 		});
@@ -254,7 +263,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					},
 				},
 				{
-					role: 'quit',
+					label: i18next.t('menu.quit'),
+					accelerator: 'CmdOrCtrl+Q',
+					role: 'quit' as const,
 				},
 			],
 		});

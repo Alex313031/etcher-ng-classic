@@ -3,11 +3,90 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# v1.19.17
+## (2024-04-26)
+
+* Rebase: Rebase and downgrade to Node 18/Electron 25 [Alex313031]
+* Added Electron version to Javascript Console
+* Added "Decompress First" option to Settings
+* Tweaked Settings page
+* Made most links open in new Electron window rather than external browser
+* Stopped inlining notification icon png
+* Completely disabled auto-updates and telemetry
+* Fixed dark mode sometimes not working on some OSes
+* Added "Edit Config File" to the Developer menu
+* Added keyboard shortcut for chrome://process-internals
+* Changed Restart App shortcut to Ctrl + Alt + R instead of Ctrl + Shift + R, which would just reload the page
+* Linting and spelling fixes
+
+# v1.19.16
+## (2024-04-26)
+
+* patch: hold request for metadata while waiting for flasher [Edwin Joassart]
+
+# v1.19.15
+## (2024-04-26)
+
+* patch: bump etcher-sdk to 9.0.11 to fix url loading using http/2 [Edwin Joassart]
+
+# v1.19.14
+## (2024-04-25)
+
+* patch: pretty-bytes to 6.1.1 [Edwin Joassart]
+
+# v1.19.13
+## (2024-04-25)
+
+* patch: use etcher icon as loading for windows installer [Edwin Joassart]
+* patch: fix windows squirrel install [Edwin Joassart]
+
+# v1.19.12
+## (2024-04-25)
+
+* patch: bump minors & patch [Edwin Joassart]
+* patch: bump @electron-forge/* to 7.4.0 [Edwin Joassart]
+* patch: bump electron to 30.0.1 & @electron/remote to 2.1.2 [Edwin Joassart]
+* patch: npm upgrade [Edwin Joassart]
+* patch: bump @balena/lint to 8.0.2 and fix formating [Edwin Joassart]
+* patch: fix pretty-bytes imports [Edwin Joassart]
+* patch: bump etcher-sdk to 9.0.9 [Edwin Joassart]
+
+# v1.19.11
+## (2024-04-25)
+
+* patch: setup wdio and port (most) tests [Edwin Joassart]
+
+# v1.19.10
+## (2024-04-23)
+
+* patch: remove node-ipc and tests [Edwin Joassart]
+* patch: switch api; use ws; integrate sudo-prompt - switch api roles flow - use websocket instead of node-ipc - integrate; modernize; simplify and deprecate sudo-prompt [Edwin Joassart]
+* patch: refactor api to use a single topic [Edwin Joassart]
+* patch: set require node engine to 20 [Edwin Joassart]
+
+# v1.19.9
+## (2024-04-22)
+
+* patch: prevent rebuild of native deps by @electron/rebuild [Edwin Joassart]
+
+# v1.19.8
+## (2024-04-22)
+
+* patch: replace deprecated pkg with yao-pkg and bump etcher-util node v to 20.10 [Edwin Joassart]
+
+# v1.19.7
+## (2024-04-15)
+
+* Update and fix etcher-sdk on Windows [Alex313031]
+* patch: fix formating [Edwin Joassart]
+* patch: configure prettier in the project to use balena-lint configuration [Edwin Joassart]
+
 # v1.19.6
 ## (2024-02-20)
 
 * Update notification icon [Alex313031]
 * Replace deprecated flowzone input tests_run_on [Kyle Harding]
+* patch: fix win signature process [Edwin Joassart]
 
 # v1.19.5
 ## (2024-02-08)

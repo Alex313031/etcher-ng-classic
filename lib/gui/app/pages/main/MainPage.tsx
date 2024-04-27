@@ -18,7 +18,7 @@ import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/gear.svg';
 import QuestionCircleSvg from '@fortawesome/fontawesome-free/svgs/solid/circle-question.svg';
 
 import * as path from 'path';
-import * as prettyBytes from 'pretty-bytes';
+import prettyBytes from 'pretty-bytes';
 import * as React from 'react';
 import { Flex } from 'rendition';
 import styled from 'styled-components';
@@ -27,11 +27,12 @@ import FinishPage from '../../components/finish/finish';
 import { ReducedFlashingInfos } from '../../components/reduced-flashing-infos/reduced-flashing-infos';
 import { SettingsModal } from '../../components/settings/settings';
 import { SourceSelector } from '../../components/source-selector/source-selector';
-import { SourceMetadata } from '../../../../shared/typings/source-selector';
+import type { SourceMetadata } from '../../../../shared/typings/source-selector';
 import * as flashState from '../../models/flash-state';
 import * as selectionState from '../../models/selection-state';
 import * as settings from '../../models/settings';
 import { observe } from '../../models/store';
+import { open as openInternal } from '../../os/open-internal-remote/services/open-internal';
 import { open as openExternal } from '../../os/open-external/services/open-external';
 import {
 	IconButton as BaseIcon,
@@ -284,7 +285,7 @@ export class MainPage extends React.Component<
 						width="100%"
 						alignItems="center"
 						justifyContent="center"
-						title="balenaEtcher Website"
+						title="Etcher-ng Website"
 					>
 						<EtcherSvg
 							width="123px"
@@ -295,7 +296,7 @@ export class MainPage extends React.Component<
 								WebkitAppRegion: 'no-drag',
 							}}
 							onClick={() =>
-								openExternal('https://etcher.balena.io?ref=etcher_footer')
+								openInternal('https://github.com/Alex313031/etcher-ng#readme')
 							}
 							tabIndex={100}
 						/>
@@ -318,7 +319,7 @@ export class MainPage extends React.Component<
 								icon={<QuestionCircleSvg height="1em" fill="currentColor" />}
 								title="Help"
 								onClick={() =>
-									openExternal(
+									openInternal(
 										selectionState.getImage()?.supportUrl ||
 											'https://github.com/Alex313031/etcher-ng/blob/master/docs/SUPPORT.md',
 									)

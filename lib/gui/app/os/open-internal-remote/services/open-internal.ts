@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 balena.io
+ * Copyright 2024 balena.io and Alex313031
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-import { expect } from 'chai';
-import * as ipc from 'node-ipc';
+import * as remote from '@electron/remote';
+import { logEvent } from '../../../modules/analytics';
 
-import('../../../lib/gui/modules/child-writer');
+/**
+ * @summary Open an external resource in a new BrowserWindow
+ */
+export async function open(url: string) {
+	logEvent('Open internal link', { url });
 
-describe('Browser: childWriter', function () {
-	it('should have the ipc config set to silent', function () {
-		expect(ipc.config.silent).to.be.true;
-	});
-});
+	if (url) {
+		new remote.BrowserWindow({
+			width: 1024,
+			height: 768,
+			useContentSize: true,
+		}).loadURL(url);
+	}
+}

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { Drive as DrivelistDrive } from 'drivelist';
-import * as sdk from 'etcher-sdk';
-import { Dictionary } from 'lodash';
+import type { Drive as DrivelistDrive } from 'drivelist';
+import type * as sdk from 'etcher-sdk';
+import type { Dictionary } from 'lodash';
 import * as errors from '../../../shared/errors';
-import { SourceMetadata } from '../../../shared/typings/source-selector';
+import type { SourceMetadata } from '../../../shared/typings/source-selector';
 import * as flashState from '../models/flash-state';
 import * as selectionState from '../models/selection-state';
 import * as settings from '../models/settings';
 import * as analytics from '../modules/analytics';
 import * as windowProgress from '../os/window-progress';
-import { startApiAndSpawnChild } from './api';
+import { spawnChildAndConnect } from './api';
 
 /**
  * @summary Handle a flash error and log it to analytics
@@ -47,7 +47,7 @@ function handleErrorLogging(
 	} else if (error.code === 'ENOSPC') {
 		analytics.logEvent('Out of space', eventData);
 	} else if (error.code === 'ECHILDDIED') {
-		analytics.logEvent('Child died unexpectedly', eventData);
+		analytics.logEvent('Child process died unexpectedly', eventData);
 	} else {
 		analytics.logEvent('Flash error', {
 			...eventData,
@@ -78,15 +78,14 @@ async function performWrite(
 ): Promise<{ cancelled?: boolean }> {
 	const { verify, autoBlockmapping, decompressFirst } = await settings.getAll();
 
-	console.log({ image, drives });
-
 	// Spawn the child process with privileges and wait for the connection to be made
-	const { emit, registerHandler, terminateServer } =
-		await startApiAndSpawnChild({
-			withPrivileges: true,
-		});
+	const { emit, registerHandler } = await spawnChildAndConnect({
+		withPrivileges: true,
+	});
 
 	return await new Promise((resolve, reject) => {
+		// if the connection failed, reject the promise
+
 		const flashResults: FlashResults = {};
 
 		const analyticsData = {
@@ -98,7 +97,7 @@ async function performWrite(
 		};
 
 		const onFail = ({ device, error }: { device: any; error: any }) => {
-			console.log('fail event');
+			console.log('Fail Event:');
 			console.log(device);
 			console.log(error);
 			if (device.devicePath) {
@@ -108,31 +107,31 @@ async function performWrite(
 			finish();
 		};
 
-		const onDone = (event: any) => {
-			console.log('done event');
-			event.results.errors = event.results.errors.map(
+		const onDone = (payload: any) => {
+			console.log('Child Process: Flash Done!', payload);
+			payload.results.errors = payload.results.errors.map(
 				(data: Dictionary<any> & { message: string }) => {
 					return errors.fromJSON(data);
 				},
 			);
-			flashResults.results = event.results;
+			flashResults.results = payload.results;
 			finish();
 		};
 
 		const onAbort = () => {
-			console.log('abort event');
+			console.log('Child Process: Flash Aborted');
 			flashResults.cancelled = true;
 			finish();
 		};
 
 		const onSkip = () => {
-			console.log('skip event');
+			console.log('Child Process: Validation Skipped');
 			flashResults.skip = true;
 			finish();
 		};
 
 		const finish = () => {
-			console.log('Flash results', flashResults);
+			console.log('Flash Results:', flashResults);
 
 			// The flash wasn't cancelled and we didn't get a 'done' event
 			// Catch unexpected situation
@@ -146,13 +145,11 @@ async function performWrite(
 					errors.createUserError({
 						title: 'The writer process ended unexpectedly',
 						description:
-							'Please try again, and contact the Etcher team if the problem persists',
+							'Please try again, and contact the Etcher-ng team if the problem persists',
 					}),
 				);
 			}
 
-			console.log('Terminating IPC server');
-			terminateServer();
 			resolve(flashResults);
 		};
 
@@ -162,7 +159,7 @@ async function performWrite(
 		registerHandler('abort', onAbort);
 		registerHandler('skip', onSkip);
 
-		cancelEmitter = (cancelStatus: string) => emit(cancelStatus);
+		cancelEmitter = (cancelStatus: string) => emit('cancel', cancelStatus);
 
 		// Now that we know we're connected we can instruct the child process to start the write
 		const parameters = {
@@ -173,7 +170,7 @@ async function performWrite(
 			autoBlockmapping,
 			decompressFirst,
 		};
-		console.log('params', parameters);
+		console.log('Params:', parameters);
 		emit('write', parameters);
 	});
 
@@ -213,7 +210,9 @@ export async function flash(
 	// start api and call the flasher
 	try {
 		const result = await write(image, drives, flashState.setProgressState);
+		console.log('Got Results:', result);
 		await flashState.unsetFlashingFlag(result);
+		console.log('Removed flashing flag');
 	} catch (error: any) {
 		await flashState.unsetFlashingFlag({
 			cancelled: false,
@@ -231,7 +230,7 @@ export async function flash(
 			status: 'failed',
 			error,
 		};
-		analytics.logEvent('Write failed', eventData);
+		analytics.logEvent('Write Failed:', eventData);
 		throw error;
 	}
 

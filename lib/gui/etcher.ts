@@ -22,7 +22,6 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 import * as electron from 'electron';
 import * as remoteMain from '@electron/remote/main';
-import { autoUpdater } from 'electron-updater';
 import * as electronLog from 'electron-log';
 import * as Store from 'electron-store';
 import * as contextMenu from 'electron-context-menu';
@@ -59,32 +58,17 @@ electronLog.transports.file.maxSize = 1024 * 100;
 
 const store = new Store();
 
+// Globally export what OS we are on
+const isLinux = process.platform === 'linux';
 const isWin = process.platform === 'win32';
+const isMac = process.platform === 'darwin';
 
-async function checkForUpdates(interval: number) {
-	// We use a while loop instead of a setInterval to preserve
-	// async execution time between each function call
-	while (!packageUpdated) {
-		if (await settings.get('updatesEnabled')) {
-			try {
-				const release = await autoUpdater.checkForUpdates();
-				const isOutdated =
-					semver.compare(release!.updateInfo.version, version) > 0;
-				const shouldUpdate = release!.updateInfo.stagingPercentage !== 0; // undefined (default) means 100%
-				if (shouldUpdate && isOutdated) {
-					await autoUpdater.downloadUpdate();
-					packageUpdated = true;
-				}
-			} catch (err) {
-				logMainProcessException(err);
-			}
-		}
-		await delay(interval);
-	}
+async function checkForUpdates() {
+	electronLog.info('Auto-Updates disabled for this build');
 }
 
 function logMainProcessException(error: any) {
-	const shouldReportErrors = settings.getSync('errorReporting');
+	const shouldReportErrors = false;
 	console.error(error);
 	if (shouldReportErrors) {
 		SentryMain.captureException(error);
@@ -199,6 +183,8 @@ async function createMainWindow() {
 
 	electron.app.setAsDefaultProtocolClient(customProtocol);
 
+	electron.nativeTheme.themeSource = 'dark';
+
 	// mainWindow.setFullScreen(true);
 
 	// Prevent flash of white when starting the application
@@ -223,18 +209,7 @@ async function createMainWindow() {
 	remoteMain.enable(page);
 
 	page.once('did-frame-finish-load', async () => {
-		console.log('packageUpdatable', packageUpdatable);
-		autoUpdater.on('error', (err) => {
-			logMainProcessException(err);
-		});
-		if (packageUpdatable) {
-			try {
-				const checkForUpdatesTimer = 300000;
-				checkForUpdates(checkForUpdatesTimer);
-			} catch (err) {
-				logMainProcessException(err);
-			}
-		}
+		checkForUpdates();
 	});
 
 	mainWindow.on('close', () => {
@@ -242,7 +217,7 @@ async function createMainWindow() {
 			store.set('windowDetails', {
 				position: mainWindow.getPosition(),
 			});
-			electronLog.info('Saved windowDetails.');
+			electronLog.info('Saved windowDetails');
 		} else {
 			electronLog.error(
 				'Error: mainWindow was not defined while trying to save windowDetails.',
@@ -258,13 +233,40 @@ async function createMainWindow() {
 			windowDetails.position[1],
 		);
 	} else {
-		electronLog.info('No windowDetails.');
+		electronLog.warn('No windowDetails');
 	}
 
 	return mainWindow;
 }
 
-electron.app.on('window-all-closed', electron.app.quit);
+electron.app.on('edit-config-file', () => {
+	if (isLinux) {
+		electronLog.info(
+			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
+		);
+		electronLog.warn(
+			'On Linux, a default text editor for handling JSON files must also be present and configured correctly.',
+		);
+		store.openInEditor();
+		return;
+	} else {
+		electronLog.info(
+			'Note that JSON must be a recognized file type \n for the OS to open the config.json file.',
+		);
+		store.openInEditor();
+	}
+});
+
+electron.app.on('window-all-closed', () => {
+	if (!isMac) {
+		electronLog.warn('mainWindow.close()');
+		electron.app.quit();
+	} else {
+		electronLog.info('Not keeping dock alive even though this is MacOS');
+		electronLog.warn('mainWindow.close()');
+		electron.app.quit();
+	}
+});
 
 // Sending a `SIGINT` (e.g: Ctrl-C) to an Electron app that registers
 // a `beforeunload` window event handler results in a disconnected white
@@ -277,7 +279,7 @@ electron.app.on('before-quit', () => {
 		store.set('windowDetails', {
 			position: mainWindow.getPosition(),
 		});
-		electronLog.info('Saved windowDetails.');
+		electronLog.info('Saved windowDetails');
 	} else {
 		electronLog.error(
 			'Error: mainWindow was not defined while trying to save windowDetails.',
@@ -293,7 +295,7 @@ electron.app.on('relaunch', () => {
 		store.set('windowDetails', {
 			position: mainWindow.getPosition(),
 		});
-		electronLog.info('Saved windowDetails.');
+		electronLog.info('Saved windowDetails');
 	} else {
 		electronLog.error(
 			'Error: mainWindow was not defined while trying to save windowDetails.',
@@ -428,6 +430,7 @@ async function main(): Promise<void> {
 	} else {
 		initSentryMain();
 		await electron.app.whenReady();
+		electron.app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		const window = await createMainWindow();
 		electron.app.on('second-instance', async (_event, argv) => {
 			if (window.isMinimized()) {

@@ -1,4 +1,11 @@
 /*
+ *
+ * TODO:
+ * This test should be replaced by an E2E test.
+ *
+ */
+
+/*
  * Copyright 2020 balena.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +22,11 @@
  */
 
 import { expect } from 'chai';
-import { Drive as DrivelistDrive } from 'drivelist';
-import { sourceDestination } from 'etcher-sdk';
-import * as ipc from 'node-ipc';
-import { assert, SinonStub, stub } from 'sinon';
+import type { Drive as DrivelistDrive } from 'drivelist';
+import type { SinonStub } from 'sinon';
+import { assert, stub } from 'sinon';
 
-import { SourceMetadata } from '../../../lib/gui/app/components/source-selector/source-selector';
+import type { SourceMetadata } from '../../../lib/shared/typings/source-selector';
 import * as flashState from '../../../lib/gui/app/models/flash-state';
 import * as imageWriter from '../../../lib/gui/app/modules/image-writer';
 
@@ -35,7 +41,7 @@ describe('Browser: imageWriter', () => {
 			description: 'foo.img',
 			displayName: 'foo.img',
 			path: 'foo.img',
-			SourceType: sourceDestination.File,
+			SourceType: 'File',
 			extension: 'img',
 		};
 
@@ -138,13 +144,6 @@ describe('Browser: imageWriter', () => {
 					expect(error.message).to.equal('write error');
 				}
 			});
-		});
-	});
-
-	describe('.performWrite()', function () {
-		it('should set the ipc config to silent', function () {
-			// Reset this value as it can persist from other tests
-			expect(ipc.config.silent).to.be.true;
 		});
 	});
 });
