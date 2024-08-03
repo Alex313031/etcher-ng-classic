@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 balena.io
+ * Copyright 2024 balena.io and Alex313031
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import { promises as fs } from 'fs';
 import { platform } from 'os';
 import * as path from 'path';
 import * as semver from 'semver';
-import * as lodash from 'lodash';
+import { once } from 'lodash';
 
 import './app/i18n';
 
@@ -39,7 +39,6 @@ import * as settings from './app/models/settings';
 import { buildWindowMenu } from './menu';
 import * as i18n from 'i18next';
 import * as SentryMain from '@sentry/electron/main';
-import * as packageJSON from '../../package.json';
 import { anonymizeSentryData } from './app/modules/analytics';
 
 import { delay } from '../shared/utils';
@@ -54,6 +53,7 @@ let mainWindow: any = null;
 remoteMain.initialize();
 
 // Restrict main.log size to 100Kb
+electronLog.initialize();
 electronLog.transports.file.maxSize = 1024 * 100;
 
 const store = new Store();
@@ -109,12 +109,16 @@ async function getCommandLineURL(argv: string[]): Promise<string | undefined> {
 	}
 }
 
-const initSentryMain = lodash.once(() => {
+const initSentryMain = once(() => {
 	const dsn =
-		settings.getSync('analyticsSentryToken') ||
-		lodash.get(packageJSON, ['analytics', 'sentry', 'token']);
+		settings.getSync('analyticsSentryToken') || process.env.SENTRY_TOKEN;
 
-	SentryMain.init({ dsn, beforeSend: anonymizeSentryData });
+	SentryMain.init({
+		dsn,
+		beforeSend: anonymizeSentryData,
+		debug: process.env.ETCHER_SENTRY_DEBUG === 'true',
+	});
+	console.log(SentryMain.getCurrentScope());
 });
 
 const sourceSelectorReady = new Promise((resolve) => {
@@ -275,16 +279,7 @@ electron.app.on('window-all-closed', () => {
 // make use of it to ensure the browser window is completely destroyed.
 // See https://github.com/electron/electron/issues/5273
 electron.app.on('before-quit', () => {
-	if (mainWindow) {
-		store.set('windowDetails', {
-			position: mainWindow.getPosition(),
-		});
-		electronLog.info('Saved windowDetails');
-	} else {
-		electronLog.error(
-			'Error: mainWindow was not defined while trying to save windowDetails.',
-		);
-	}
+	electronLog.info('Etcher-ng is quitting now'),
 	electron.app.releaseSingleInstanceLock();
 	process.exit(EXIT_CODES.SUCCESS);
 });

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# v1.19.22
+## (2024-07-18)
+
+* Update some npm packages [Alex313031]
+* Replace deprecated Flowzone inputs [Kyle Harding]
+
+# v1.19.21
+## (2024-06-02)
+
+* patch: Update Electron to 28.3.3 [Alex313031]
+* Update some npm packages [Alex313031]
+
+# v1.19.20
+## (2024-05-30)
+
+* patch: fix missing windows dependency [Edwin Joassart]
+
+# v1.19.19
+## (2024-05-28)
+
+* patch: add sentry debug flag [Edwin Joassart]
+* patch: fix Sentry DSN for main process [Edwin Joassart]
+
+# v1.19.18
+## (2024-05-09)
+
+* patch: fix injection of analytics key at build time [Edwin Joassart]
+
 # v1.19.17
 ## (2024-04-26)
 

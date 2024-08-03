@@ -70,7 +70,7 @@ const translation = {
 		},
 		target: {
 			selectTarget: 'Select target',
-			plugTarget: 'Plug a target drive',
+			plugTarget: 'Plug in a target drive',
 			targets: 'Targets',
 			change: 'Change',
 		},
@@ -157,6 +157,7 @@ const translation = {
 			devmenu: 'Developer',
 			electrondevtools: 'Open Electron DevTools',
 			testwindow: 'Open Test Window',
+			config: 'Edit Config File',
 			restart: 'Restart App',
 			gpu: 'Open chrome://gpu',
 			procinternals: 'Open chrome://process-internals',

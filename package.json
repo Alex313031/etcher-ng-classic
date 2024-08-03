@@ -4,7 +4,7 @@
   "appName": "Etcher-ng",
   "productName": "Etcher-ng",
   "displayName": "Etcher NG",
-  "version": "1.19.17",
+  "version": "1.19.22",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -34,7 +34,7 @@
     "clean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack && rimraf node_modules",
     "distclean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack",
     "burn": "rimraf package-lock.json && rimraf npm-shrinkwrap.json && rimraf node_modules",
-    "shrinkwrap": "npm shrinkwrap"
+    "shrink": "npm shrinkwrap"
   },
   "husky": {
     "hooks": {
@@ -43,20 +43,20 @@
   },
   "dependencies": {
     "@electron/remote": "2.1.2",
-    "@fortawesome/fontawesome-free": "6.5.2",
+    "@fortawesome/fontawesome-free": "6.6.0",
     "@ronomon/direct-io": "3.0.1",
     "@sentry/electron": "4.24.0",
     "analytics-client": "2.0.2",
     "axios": "1.6.8",
-    "debug": "4.3.4",
+    "debug": "4.3.6",
     "drivelist": "12.0.2",
     "electron-context-menu": "3.6.1",
-    "electron-log": "5.1.2",
-    "electron-squirrel-startup": "1.0.0",
+    "electron-log": "5.1.7",
+    "electron-squirrel-startup": "1.0.1",
     "electron-store": "8.2.0",
-    "etcher-sdk": "9.0.11",
-    "i18next": "23.11.2",
-    "immutable": "4.3.5",
+    "etcher-sdk": "9.1.0",
+    "i18next": "23.12.2",
+    "immutable": "4.3.7",
     "lodash": "4.17.21",
     "outdent": "0.8.0",
     "path-is-inside": "1.0.2",
@@ -66,11 +66,11 @@
     "react-i18next": "13.5.0",
     "redux": "4.2.1",
     "rendition": "35.2.0",
-    "semver": "7.6.0",
+    "semver": "7.6.3",
     "styled-components": "5.3.11",
     "sys-class-rgb-led": "3.0.1",
     "uuid": "9.0.1",
-    "ws": "8.16.0"
+    "ws": "8.18.0"
   },
   "devDependencies": {
     "@balena/lint": "8.0.2",
@@ -84,27 +84,27 @@
     "@electron-forge/plugin-webpack": "7.4.0",
     "@reforged/maker-appimage": "3.3.2",
     "@svgr/webpack": "8.1.0",
-    "@types/chai": "4.3.14",
+    "@types/chai": "4.3.17",
     "@types/copy-webpack-plugin": "10.1.0",
     "@types/debug": "4.1.12",
     "@types/mime-types": "2.1.4",
-    "@types/node": "^18.19.31",
+    "@types/node": "18.19.43",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
     "@types/semver": "7.5.8",
     "@types/sinon": "17.0.3",
     "@types/tmp": "0.2.6",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
-    "@wdio/cli": "8.36.1",
-    "@wdio/local-runner": "8.36.1",
-    "@wdio/mocha-framework": "8.36.1",
-    "@wdio/spec-reporter": "8.36.1",
-    "@yao-pkg/pkg": "5.11.5",
+    "@wdio/cli": "8.39.1",
+    "@wdio/local-runner": "8.39.1",
+    "@wdio/mocha-framework": "8.39.0",
+    "@wdio/spec-reporter": "8.39.0",
+    "@yao-pkg/pkg": "5.12.0",
     "catch-uncommitted": "2.0.0",
-    "chai": "4.4.1",
+    "chai": "4.5.0",
     "copy-webpack-plugin": "10.2.4",
     "css-loader": "5.2.7",
-    "electron": "28.3.1",
+    "electron": "28.3.3",
     "electron-builder": "24.13.3",
     "file-loader": "6.2.0",
     "husky": "8.0.3",
@@ -116,10 +116,10 @@
     "style-loader": "3.3.4",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
-    "tslib": "2.6.2",
+    "tslib": "2.6.3",
     "typescript": "5.3.3",
     "url-loader": "4.1.1",
-    "wdio-electron-service": "6.4.1",
+    "wdio-electron-service": "6.6.1",
     "xvfb-maybe": "0.2.1"
   },
   "hostDependencies": {
@@ -166,10 +166,11 @@
     "node": ">=18 <20"
   },
   "versionist": {
-    "publishedAt": "2024-04-26T18:06:56.845Z"
+    "publishedAt": "2024-08-02T18:12:56.823Z"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
-    "utf-8-validate": "5.0.10"
+    "utf-8-validate": "6.0.4",
+    "winusb-driver-generator": "2.1.5"
   }
 }

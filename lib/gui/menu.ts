@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 balena.io
+ * Copyright 2024 balena.io and Alex313031
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				},
 				{ type: 'separator' },
 				{
-					label: 'Edit Config File',
+					label: i18next.t('menu.config'),
 					click() {
 						electronLog.info('Editing Config File');
 						electron.app.emit('edit-config-file');
